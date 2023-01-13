@@ -14,7 +14,21 @@ const PinDetail = ({ user }) => {
   const [pinDetail, setPinDetail] = useState();
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
-
+  const addComment = () => {
+    if (comment) {
+      setAddingComment(true);
+      client
+        .patch(pinId)
+        .setIfMissing({ comments: [] })
+        .insert('after', 'comments[-1]', [{ comment, _key: uuidv4(), postedBy: { _type: 'postedBy', _ref: user._id } }])
+        .commit()
+        .then(() => {
+          fetchPinDetails();
+          setComment('');
+          setAddingComment(false);
+        });
+    }
+  };
   const fetchPinDetails = () => {
     const query = pinDetailQuery(pinId);
 
@@ -36,22 +50,7 @@ const PinDetail = ({ user }) => {
     fetchPinDetails();
   }, [pinId]);
 
-  const addComment = () => {
-    if (comment) {
-      setAddingComment(true);
-
-      client
-        .patch(pinId)
-        .setIfMissing({ comments: [] })
-        .insert('after', 'comments[-1]', [{ comment, _key: uuidv4(), postedBy: { _type: 'postedBy', _ref: user._id } }])
-        .commit()
-        .then(() => {
-          fetchPinDetails();
-          setComment('');
-          setAddingComment(false);
-        });
-    }
-  };
+  
 
   if (!pinDetail) {
     return (
@@ -91,9 +90,9 @@ const PinDetail = ({ user }) => {
               </h1>
               <p className="mt-3">{pinDetail.about}</p>
             </div>
-            <Link to={`/user-profile/${pinDetail?.postedBy._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg ">
-              <img src={pinDetail?.postedBy.image} className="w-10 h-10 rounded-full" alt="user-profile" />
-              <p className="font-bold">{pinDetail?.postedBy.userName}</p>
+            <Link to={`/user-profile/${pinDetail.postedBy?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg ">
+              <img src={pinDetail.postedBy?.image} className="w-10 h-10 rounded-full" alt="user-profile" />
+              <p className="font-bold">{pinDetail.postedBy?.userName}</p>
             </Link>
             <h2 className="mt-5 text-2xl">Comments</h2>
             <div className="max-h-370 overflow-y-auto">
@@ -127,7 +126,7 @@ const PinDetail = ({ user }) => {
                 className="bg-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none"
                 onClick={addComment}
               >
-                {addingComment ? 'Doing...' : 'Done'}
+                {addingComment ? 'Posting the comment ....' : 'Post'}
               </button>
             </div>
           </div>
