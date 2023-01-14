@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 ## 🔗 Share With Ayush
 
 A full stack Social Media Applications to interract with your friends and family .You can post images on our Applications others can acess your post and download it save it .You can save your others post ,comment on your friends post.
