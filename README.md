@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 ## 🔗 Share With Ayush
 
@@ -43,3 +44,5 @@ Login Page
 
 Database Layout
 ![d](https://github.com/Ayushtri441/Sharewith_me/blob/master/frontend/src/assets/Screenshot/sharewithAyush%20%E2%80%93%20Desk%20-%20Google%20Chrome%201_14_2023%206_39_17%20AM.png?raw=true)
+=======
+
